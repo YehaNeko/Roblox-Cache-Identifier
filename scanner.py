@@ -79,6 +79,3 @@ def identify_content(filepath):
         return "Error: Invalid binary structure"
     except Exception as e:
         return f"Error: {str(e)}"
-
-#file_type = identify_content(r"C:\Users\markg\Desktop\FleaGUI\ffdf82a12c12ff10d21deb998f1837d1")
-#print(file_type)
