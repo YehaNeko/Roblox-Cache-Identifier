@@ -22,7 +22,7 @@ def identify_content(filepath):
             if req_status_code in REDIRECT_CODES:
                 return f"Redirect ({req_status_code})"
             elif req_status_code != 200:
-                return f"Error ({req_status_code})"
+                raise ValueError(f"Invalid request status code in file: {req_status_code}")
 
             header_data_len, = struct.unpack('<I', f.read(4))
             f.seek(4, os.SEEK_CUR)
@@ -74,8 +74,8 @@ def identify_content(filepath):
                 return "Unknown"
 
     except FileNotFoundError:
-        return "Error: File not found"
+        raise FileNotFoundError(f"File not found: {filepath}")
     except struct.error:
-        return "Error: Invalid binary structure"
+        raise ValueError("Invalid binary structure in file")
     except Exception as e:
-        return f"Error: {str(e)}"
+        raise RuntimeError(f"Error processing file: {str(e)}")
