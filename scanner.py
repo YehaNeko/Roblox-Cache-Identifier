@@ -68,7 +68,7 @@ def identify_content(filepath):
                 return "OpenType Font"
             elif len(cont) >= 4 and struct.unpack('<I', cont[:4])[0] == MAGIC_NUMBER_ZSTD:
                 return "Zstandard Data"
-            elif len(cont) >= 4 and bytes(cont[:4]) == bytes(MAGIC_NUMBER_VIDEO_FRAME):
+            elif len(cont) >= 4 and list(cont[:4]) == MAGIC_NUMBER_VIDEO_FRAME:
                 return "VideoFrame Segment"
             else:
                 return "Unknown"
