@@ -1,9 +1,16 @@
+import os
 import struct
+
+#constants
+REDIRECT_CODES = {301, 302, 303, 307, 308}
+MAGIC_NUMBER_ZSTD = 0xFD2FB528
+MAGIC_NUMBER_VIDEO_FRAME = [0x1A, 0x45, 0xDF, 0xA3]
+DEFAULT_PREVIEW_LENGTH = 48
 
 def identify_content(filepath):
     try:
         with open(filepath, 'rb') as f:
-            buffer = f.read(48)
+            buffer = f.read(DEFAULT_PREVIEW_LENGTH)
             if buffer[:4] != b"RBXH":
                 return "Unknown Header"
 
@@ -12,17 +19,17 @@ def identify_content(filepath):
             f.seek(12 + link_len + 1)
             req_status_code = struct.unpack('<I', f.read(4))[0]
 
-            if req_status_code in {301, 302, 303, 307, 308}:
+            if req_status_code in REDIRECT_CODES:
                 return f"Redirect ({req_status_code})"
             elif req_status_code != 200:
                 return f"Error ({req_status_code})"
 
             header_data_len = struct.unpack('<I', f.read(4))[0]
-            f.seek(f.tell() + 4)
+            f.seek(4, os.SEEK_CUR)
             file_size = struct.unpack('<I', f.read(4))[0]
-            f.seek(f.tell() + 8 + header_data_len)
+            f.seek(8 + header_data_len, os.SEEK_CUR)
 
-            cont = f.read(min(file_size, 48))
+            cont = f.read(min(file_size, DEFAULT_PREVIEW_LENGTH))
             begin = cont.decode('utf-8', errors='ignore')
 
             if "<roblox!" in begin:
@@ -37,7 +44,7 @@ def identify_content(filepath):
                 return "Translation"
             elif "PNG\r\n" in begin:
                 return "PNG"
-            elif begin.startswith("GIF87a") or begin.startswith("GIF89a"):
+            elif begin.startswith(("GIF87a", "GIF89a")):
                 return "GIF"
             elif "JFIF" in begin or "Exif" in begin:
                 return "JFIF"
@@ -59,9 +66,9 @@ def identify_content(filepath):
                 return "Client Version JSON"
             elif "GDEF" in begin or "GPOS" in begin or "GSUB" in begin:
                 return "OpenType Font"
-            elif len(cont) >= 4 and struct.unpack('<I', cont[:4])[0] == 0xFD2FB528:
+            elif len(cont) >= 4 and struct.unpack('<I', cont[:4])[0] == MAGIC_NUMBER_ZSTD:
                 return "Zstandard Data"
-            elif len(cont) >= 4 and cont[0] == 0x1A and cont[1] == 0x45 and cont[2] == 0xDF and cont[3] == 0xA3:
+            elif len(cont) >= 4 and bytes(cont[:4]) == bytes(MAGIC_NUMBER_VIDEO_FRAME):
                 return "VideoFrame Segment"
             else:
                 return "Unknown"
