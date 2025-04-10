@@ -15,18 +15,18 @@ def identify_content(filepath):
                 return "Unknown Header"
 
             f.seek(8)
-            link_len = struct.unpack('<I', f.read(4))[0]
+            link_len, = struct.unpack('<I', f.read(4))
             f.seek(12 + link_len + 1)
-            req_status_code = struct.unpack('<I', f.read(4))[0]
+            req_status_code, = struct.unpack('<I', f.read(4))
 
             if req_status_code in REDIRECT_CODES:
                 return f"Redirect ({req_status_code})"
             elif req_status_code != 200:
                 return f"Error ({req_status_code})"
 
-            header_data_len = struct.unpack('<I', f.read(4))[0]
+            header_data_len, = struct.unpack('<I', f.read(4))
             f.seek(4, os.SEEK_CUR)
-            file_size = struct.unpack('<I', f.read(4))[0]
+            file_size, = struct.unpack('<I', f.read(4))
             f.seek(8 + header_data_len, os.SEEK_CUR)
 
             cont = f.read(min(file_size, DEFAULT_PREVIEW_LENGTH))
