@@ -1,0 +1,14 @@
+[project]
+name = "binary-header-ident"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = [
+    "mypy[mypyc]",
+]
+
+[project.optional-dependencies]
+dev = [
+    "jupyter",
+]
