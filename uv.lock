@@ -125,15 +125,20 @@ name = "binary-header-ident"
 version = "0.1.0"
 source = { virtual = "." }
 dependencies = [
-    { name = "jupyter" },
     { name = "mypy", extra = ["mypyc"] },
+]
+
+[package.optional-dependencies]
+dev = [
+    { name = "jupyter" },
 ]
 
 [package.metadata]
 requires-dist = [
-    { name = "jupyter" },
+    { name = "jupyter", marker = "extra == 'dev'" },
     { name = "mypy", extras = ["mypyc"] },
 ]
+provides-extras = ["dev"]
 
 [[package]]
 name = "bleach"

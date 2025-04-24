@@ -26,13 +26,19 @@ def mp_identify() -> list[str]:
 
 
 def main() -> None:
+    print('Identifying files...')
     start = time.perf_counter()
     a = mp_identify()
     end = time.perf_counter()
 
     c = Counter('Mesh' if i.startswith('Mesh') else i for i in a)
-    print(f'Done in {end - start:.2f}s.')
-    print('Files:', c.total())
+    total_time = round(end - start, 2)
+    total_files = c.total()
+    avg = round(total_time * 10_000 / total_files, 2)
+
+    print(f'Done in {total_time}s.')
+    print('Files:', total_files)
+    print(f'Approximate time per 10k files: {avg}s')
     pprint(c)
 
 

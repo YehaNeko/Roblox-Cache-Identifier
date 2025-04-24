@@ -50,14 +50,28 @@ def identify_content(filepath: Path) -> str:
             return 'Unknown'
 
         # Detect file type
-        if content.startswith(b'<roblox!'):
-            return 'RBXM'
+        if content.startswith(b'version'):
+            v = content[8:12]
+            return f'Mesh (v{v.decode('utf-8')})'
 
-        elif content.startswith(b'<roblox xml'):
-            return 'XML'
+        elif b'KTX 11' in content:
+            return 'Khronos Texture'
 
         elif b'PNG\r\n' in content:
             return 'PNG'
+
+        # todo: webp not needed maybe
+        elif content.startswith(b'RIFF') and b'WEBP' in content:
+            return 'WebP'
+
+        elif content.startswith(b'<roblox!'):
+            return 'RBXM'
+
+        elif content.startswith(b'OggS'):
+            return 'OGG'
+
+        elif content.startswith(b'<roblox xml'):
+            return 'XML'
 
         elif content.startswith((b'GIF87a', b'GIF89a')):
             return 'GIF'
@@ -65,25 +79,11 @@ def identify_content(filepath: Path) -> str:
         elif b'JFIF' in content or b'Exif' in content:
             return 'JFIF'
 
-        # todo: webp not needed maybe
-        elif content.startswith(b'RIFF') and b'WEBP' in content:
-            return 'WebP'
-
-        elif content.startswith(b'OggS'):
-            return 'OGG'
-
-        elif content.startswith((b'ID3', b'\xFF\xE0')):
+        elif content.startswith((b'ID3', b'\xff\xe0')):
             return 'MP3'
-
-        elif b'KTX 11' in content:
-            return 'Khronos Texture'
 
         elif content.startswith(b'#EXTM3U'):
             return 'EXTM3U'
-
-        elif content.startswith(b'version'):
-            v = content[8:12]
-            return f'Mesh (v{v.decode('utf-8')})'
 
         elif content.startswith(b'{"translations"'):
             return 'Translation List JSON'
