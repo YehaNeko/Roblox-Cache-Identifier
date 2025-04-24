@@ -22,9 +22,6 @@ def identify_content(filepath: Path) -> str:
         # Read the initial header and enough data for all checks
         buffer: bytes = f.read(12)
         if buffer[:4] != b'RBXH':
-            f.seek(0)
-            print(f.read().decode('utf-8', errors='ignore'))
-            print(filepath)
             return 'Unknown Header'
 
         # Unpack link_len
