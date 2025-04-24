@@ -21,7 +21,12 @@ def identify_content(filepath: Path) -> str:
     with open(filepath, 'rb') as f:
         # Read the initial header and enough data for all checks
         buffer: bytes = f.read(12)
-        if buffer[:4] != b'RBXH':
+        initial_header = buffer[:4]
+
+        # Check initial header
+        if initial_header == b'BXBR':
+            return 'BXBR'
+        elif initial_header != b'RBXH':
             return 'Unknown Header'
 
         # Unpack link_len
@@ -54,10 +59,10 @@ def identify_content(filepath: Path) -> str:
             v = content[8:12]
             return f'Mesh (v{v.decode('utf-8')})'
 
-        elif b'KTX 11' in content:
+        elif content.startswith(b'\xabKTX 11'):
             return 'Khronos Texture'
 
-        elif b'PNG\r\n' in content:
+        elif content.startswith(b'\x89PNG'):
             return 'PNG'
 
         # todo: webp not needed maybe
