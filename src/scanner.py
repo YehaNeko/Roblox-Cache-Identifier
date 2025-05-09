@@ -1,14 +1,27 @@
+"""
+! OLD VERSION OF THE ALGORITHM
+
+This version uses multiple read and seek operations.
+Refer to the new version in src/scanner_rev.py because it might be better.
+"""
+
 from __future__ import annotations
 
 __all__ = ('identify_content',)
 
 import os
 import struct
+from concurrent.futures import ProcessPoolExecutor
 from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
     from pathlib import Path
     from typing import Final
+
+
+# Constants
+ROBLOX_CACHE_PATH: Final[Path] = Path('~/AppData/Local/Temp/Roblox/http').expanduser()
+
 
 # Constants
 REDIRECT_CODES: Final[set[int]] = {301, 302, 303, 307, 308}
@@ -119,3 +132,11 @@ def identify_content(filepath: Path) -> str:
 
         else:
             return 'Unknown'
+
+
+def mp_identify() -> list[str]:
+    with ProcessPoolExecutor(max_workers=os.process_cpu_count()) as e:
+        results = list(
+            e.map(identify_content, ROBLOX_CACHE_PATH.iterdir(), chunksize=500)
+        )
+        return results
