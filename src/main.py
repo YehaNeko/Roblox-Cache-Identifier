@@ -1,5 +1,4 @@
 # pylint: disable=possibly-used-before-assignment,no-name-in-module
-# spell-checker: disable
 
 from __future__ import annotations
 
@@ -11,10 +10,7 @@ if (_IS_MAIN := __name__ == '__main__') or TYPE_CHECKING:
     import time
     import gc
     from collections import Counter
-    from pathlib import Path
     from pprint import pprint
-
-    ROBLOX_CACHE_PATH = Path('~/AppData/Local/Temp/Roblox/http').expanduser()
 
 
 def main() -> None:
