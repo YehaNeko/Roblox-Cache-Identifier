@@ -1,21 +1,23 @@
 # Binary Header Ident
 
-This project helps identify binary file headers. To get started, follow the instructions below to clone the repository and set up the project using [uv](https://github.com/astral-sh/uv).
+This project helps identify headers of Roblox cache files.
 
-## 1. Clone the Repository
+## Development Environment
 
-Open your terminal and run:
+### Dependencies
+
+- **Windows 10/11**
+- [Git](https://git-scm.com/)
+- [uv](https://docs.astral.sh/uv/getting-started/installation/)
+
+### 1. Clone the Repository
 
 ```sh
-git clone https://github.com/YehaNeko/Roblox-Cache-Identifier
-cd Binary-Header-Ident
+git clone https://github.com/YehaNeko/Roblox-Cache-Identifier.git
+cd Roblox-Cache-Identifier
 ```
 
-## 2. Install [uv](https://docs.astral.sh/uv/getting-started/installation/)
-
-Follow the instructions in the [uv documentation](https://docs.astral.sh/uv/getting-started/installation/) to install `uv`.
-
-## 3. Sync the Project Dependencies
+### 2. Sync the Project Dependencies
 
 To install all dependencies specified in `pyproject.toml`, run:
 
@@ -25,30 +27,18 @@ uv sync
 
 This will create a virtual environment (if one does not exist) and install all required packages.
 
-## 4. Activate the Virtual Environment (if needed)
+### 3. Activate the Virtual Environment (if needed)
 
 If `uv` created a virtual environment, activate it:
 
-- **Windows:**
+```sh
+.venv\Scripts\activate
+```
 
-  ```sh
-  .venv\Scripts\activate
-  ```
+### 4. Run the Project
 
-- **macOS/Linux:**
-
-  ```sh
-  source .venv/bin/activate
-  ```
-
-## 5. Run the Project
-
-You can now run the project as needed, for example:
+You can now run the project with:
 
 ```sh
 uv run ./src/main.py
 ```
-
----
-
-For more information, see the documentation for [uv](https://github.com/astral-sh/uv) or open an issue if you have any problems.
